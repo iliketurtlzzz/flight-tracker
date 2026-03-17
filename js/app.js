@@ -4,6 +4,28 @@
 
 let allFlights = [];
 
+// ---- Google Flights URL builder ----
+function googleFlightsUrl(origin, destination, departDate, returnDate) {
+  // Google Flights explore URL format
+  const base = 'https://www.google.com/travel/flights?q=Flights';
+  const from = encodeURIComponent(origin);
+  const to = encodeURIComponent(destination);
+  const dep = departDate || '';
+  const ret = returnDate || '';
+  if (dep && ret) {
+    return `https://www.google.com/travel/flights/search?tfs=CBwQAhooEgoyMDI2LTAxLTAxagwIAhIIL20vMGhueHlyDAoCEggvbS8wNGpwbBooEgoyMDI2LTAxLTA4agwIAhIIL20vMDRqcGxyDAoCEggvbS8waG54eQ&q=flights+from+${from}+to+${to}+on+${dep}+return+${ret}`;
+  }
+  return `https://www.google.com/travel/flights?q=flights+from+${from}+to+${to}+on+${dep}`;
+}
+
+// Simpler direct Google Flights search link
+function gfLink(origin, dest, depDate, retDate) {
+  let url = `https://www.google.com/travel/flights?q=flights+from+${origin}+to+${dest}`;
+  if (depDate) url += `+on+${depDate}`;
+  if (retDate) url += `+return+${retDate}`;
+  return url;
+}
+
 // ---- Initialization ----
 document.addEventListener('DOMContentLoaded', () => {
   loadFlights();
@@ -69,6 +91,8 @@ async function handleAddFlight(e) {
     return_date: document.getElementById('return-date').value || null,
     initial_price: parseFloat(document.getElementById('current-price').value),
     current_price: parseFloat(document.getElementById('current-price').value),
+    stops: document.getElementById('stops').value || null,
+    flight_number: document.getElementById('flight-number').value.trim() || null,
     notes: document.getElementById('notes').value.trim() || null,
     status: 'active',
   };
@@ -207,6 +231,7 @@ function renderFlightCard(flight) {
   }) : '';
 
   const historyCount = flight.price_history ? flight.price_history.length : 0;
+  const searchUrl = gfLink(flight.origin, flight.destination, flight.departure_date, flight.return_date);
 
   return `
     <div class="flight-card ${isDeal ? 'is-deal' : ''}">
@@ -215,6 +240,7 @@ function renderFlightCard(flight) {
         <span class="route-arrow">${flight.return_date ? '⇄' : '→'}</span>
         <span class="airport-code">${flight.destination}</span>
         ${flight.airline ? `<span class="flight-airline">${flight.airline}</span>` : ''}
+        ${flight.flight_number ? `<span class="flight-airline">#${flight.flight_number}</span>` : ''}
       </div>
 
       <div class="flight-details">
@@ -222,19 +248,22 @@ function renderFlightCard(flight) {
           <span class="label">Depart:</span> ${departDate}
         </div>
         ${returnDate ? `<div class="flight-detail"><span class="label">Return:</span> ${returnDate}</div>` : ''}
+        ${flight.stops ? `<div class="flight-detail"><span class="label">Stops:</span> ${flight.stops}</div>` : ''}
         ${flight.notes ? `<div class="flight-detail"><span class="label">Notes:</span> ${flight.notes}</div>` : ''}
       </div>
 
       <div class="price-section">
         <span class="price-current ${isDeal ? 'under-target' : ''}">$${flight.current_price.toFixed(2)}</span>
         ${priceChanged ? `<span class="price-original">$${flight.initial_price.toFixed(2)}</span>` : ''}
-        ${priceChanged ? `<span class="price-change ${priceDiff < 0 ? 'down' : 'up'}">${priceDiff < 0 ? '↓' : '↑'} ${Math.abs(pctChange)}%</span>` : ''}
+        ${priceChanged ? `<span class="price-change ${priceDiff < 0 ? 'down' : 'up'}">${priceDiff < 0 ? '↓' : '↑'} ${Math.abs(pctChange)}% ($${Math.abs(priceDiff).toFixed(0)})</span>` : ''}
 
         <div class="flight-actions">
-          <input type="number" data-price-input="${flight.id}" placeholder="New price" min="0" step="0.01"
-            style="width:100px; padding:0.3rem 0.5rem; font-size:0.85rem;">
+          <input type="number" data-price-input="${flight.id}" placeholder="New $" min="0" step="0.01"
+            style="width:80px; padding:0.3rem 0.5rem; font-size:0.85rem;">
           <button class="btn btn-small btn-secondary" data-action="update-price" data-id="${flight.id}">Update</button>
           <button class="btn btn-small btn-secondary" data-action="history" data-id="${flight.id}">History (${historyCount})</button>
+          <a href="${searchUrl}" target="_blank" rel="noopener" class="btn btn-small btn-search">Check Price</a>
+          <a href="${searchUrl}" target="_blank" rel="noopener" class="btn btn-small btn-book">Book</a>
           <button class="btn btn-small btn-secondary" data-action="toggle" data-id="${flight.id}" data-status="${flight.status}">
             ${flight.status === 'active' ? 'Archive' : 'Reactivate'}
           </button>
@@ -245,6 +274,7 @@ function renderFlightCard(flight) {
       <div class="flight-meta">
         <span>Added ${new Date(flight.created_at).toLocaleDateString()}</span>
         <span>Status: ${flight.status}</span>
+        ${priceDrop > 0 ? `<span class="savings-tag">Saved $${priceDrop.toFixed(0)} so far</span>` : ''}
       </div>
     </div>
   `;
@@ -255,6 +285,13 @@ function updateStats() {
   document.getElementById('stat-total').textContent = allFlights.length;
   document.getElementById('stat-deals').textContent = allFlights.filter(f => (f.initial_price - f.current_price) >= 75).length;
   document.getElementById('stat-active').textContent = allFlights.filter(f => f.status === 'active').length;
+
+  // Total saved across all flights where price dropped
+  const totalSaved = allFlights.reduce((sum, f) => {
+    const drop = f.initial_price - f.current_price;
+    return drop > 0 ? sum + drop : sum;
+  }, 0);
+  document.getElementById('stat-saved').textContent = `$${totalSaved.toFixed(0)}`;
 }
 
 // ---- Deal Alerts ----
@@ -284,12 +321,24 @@ function showPriceHistory(flightId) {
   if (history.length === 0) {
     body.innerHTML = '<p style="color:var(--text-muted)">No price history yet.</p>';
   } else {
-    body.innerHTML = history.map(h => `
-      <div class="price-history-item">
-        <span>$${h.price.toFixed(2)}</span>
-        <span style="color:var(--text-muted)">${new Date(h.created_at).toLocaleString()}</span>
-      </div>
-    `).join('');
+    // Show price change between entries
+    body.innerHTML = history.map((h, i) => {
+      const prev = history[i + 1];
+      let changeHtml = '';
+      if (prev) {
+        const diff = h.price - prev.price;
+        if (Math.abs(diff) > 0.01) {
+          const cls = diff < 0 ? 'down' : 'up';
+          changeHtml = `<span class="price-change ${cls}" style="font-size:0.75rem">${diff < 0 ? '↓' : '↑'} $${Math.abs(diff).toFixed(2)}</span>`;
+        }
+      }
+      return `
+        <div class="price-history-item">
+          <span>$${h.price.toFixed(2)} ${changeHtml}</span>
+          <span style="color:var(--text-muted)">${new Date(h.created_at).toLocaleString()}</span>
+        </div>
+      `;
+    }).join('');
   }
 
   modal.classList.remove('hidden');

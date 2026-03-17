@@ -310,6 +310,39 @@ input::placeholder {
   color: white;
 }
 
+.btn-search {
+  background: rgba(0, 206, 201, 0.15);
+  color: var(--deal);
+  border: 1px solid var(--deal);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-search:hover {
+  background: var(--deal);
+  color: var(--bg);
+}
+
+.btn-book {
+  background: rgba(108, 92, 231, 0.15);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-book:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.savings-tag {
+  color: var(--success);
+  font-weight: 600;
+}
+
 /* ========== Stats Bar ========== */
 .stats-bar {
   display: flex;

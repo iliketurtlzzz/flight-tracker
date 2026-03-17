@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS flights (
   return_date DATE,
   initial_price DECIMAL(10,2) NOT NULL,
   current_price DECIMAL(10,2) NOT NULL,
+  stops TEXT,
+  flight_number TEXT,
   notes TEXT,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'expired', 'booked')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
