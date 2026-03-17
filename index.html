@@ -8,115 +8,124 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <div class="bears">
-        <canvas id="winnie-bear" width="24" height="24"></canvas>
+  <div class="app">
+    <header>
+      <div class="header-content">
         <div class="header-text">
           <h1>Flight Tracker</h1>
           <p class="tagline">Track flights. Catch deals. Fly cheap.</p>
         </div>
-        <canvas id="happy-bear" width="24" height="24"></canvas>
+        <button id="petToggle" onclick="togglePetManual()" title="Switch pet">🐕</button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <!-- Add flight form -->
-    <div class="card">
-      <h2>Add a Flight to Track</h2>
-      <form id="flight-form">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="origin">From (Airport Code)</label>
-            <input type="text" id="origin" placeholder="ATL" maxlength="3" required>
-          </div>
-          <div class="form-group">
-            <label for="destination">To (Airport Code)</label>
-            <input type="text" id="destination" placeholder="LAX" maxlength="3" required>
-          </div>
-          <div class="form-group">
-            <label for="airline">Airline</label>
-            <input type="text" id="airline" placeholder="Delta">
-          </div>
-          <div class="form-group">
-            <label for="departure-date">Departure Date</label>
-            <input type="date" id="departure-date" required>
-          </div>
-          <div class="form-group">
-            <label for="return-date">Return Date (optional)</label>
-            <input type="date" id="return-date">
-          </div>
-          <div class="form-group">
-            <label for="current-price">Current Price ($)</label>
-            <input type="number" id="current-price" placeholder="150" min="0" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="notes">Notes</label>
-            <input type="text" id="notes" placeholder="Team offsite, flexible dates...">
-          </div>
+    <!-- Doghouse / Cave banner -->
+    <div class="doghouse-wrap" id="doghouseWrap">
+      <div class="doghouse" id="doghouse" onclick="sendToSleep()" ondblclick="wakePuppy()" title="Click: bed · Double-click: wake">
+        <div class="dh-house"><canvas id="dhCanvas" width="40" height="26"></canvas>
+          <div class="dh-zzz" id="dhZzz" style="display:none"><span style="font-size:9px">z</span><span>z</span><span>Z</span></div>
         </div>
-        <button type="submit" class="btn btn-primary">Track This Flight</button>
-      </form>
-    </div>
-
-    <!-- Stats bar -->
-    <div class="stats-bar">
-      <div class="stat">
-        <span class="stat-number" id="stat-total">0</span>
-        <span class="stat-label">Tracked</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number" id="stat-deals">0</span>
-        <span class="stat-label">Dropped $75+</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number" id="stat-active">0</span>
-        <span class="stat-label">Active</span>
+        <div class="dh-sign"><canvas id="dhSign" width="28" height="22"></canvas></div>
       </div>
     </div>
 
-    <!-- Filter/sort controls -->
-    <div class="controls">
-      <h2>Tracked Flights</h2>
-      <div class="control-group">
-        <select id="filter-status">
-          <option value="all">All Flights</option>
-          <option value="active">Active</option>
-          <option value="deal">Dropped $75+</option>
-          <option value="expired">Expired</option>
-        </select>
-        <button class="btn btn-secondary" id="refresh-btn">Refresh</button>
+    <main>
+      <!-- Add flight form -->
+      <div class="card">
+        <h2>Add a Flight to Track</h2>
+        <form id="flight-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="origin">From (Airport Code)</label>
+              <input type="text" id="origin" placeholder="ATL" maxlength="3" required>
+            </div>
+            <div class="form-group">
+              <label for="destination">To (Airport Code)</label>
+              <input type="text" id="destination" placeholder="LAX" maxlength="3" required>
+            </div>
+            <div class="form-group">
+              <label for="airline">Airline</label>
+              <input type="text" id="airline" placeholder="Delta">
+            </div>
+            <div class="form-group">
+              <label for="departure-date">Departure Date</label>
+              <input type="date" id="departure-date" required>
+            </div>
+            <div class="form-group">
+              <label for="return-date">Return Date (optional)</label>
+              <input type="date" id="return-date">
+            </div>
+            <div class="form-group">
+              <label for="current-price">Current Price ($)</label>
+              <input type="number" id="current-price" placeholder="150" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="notes">Notes</label>
+              <input type="text" id="notes" placeholder="Team offsite, flexible dates...">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Track This Flight</button>
+        </form>
       </div>
-    </div>
 
-    <!-- Flight cards -->
-    <div id="flights-container">
-      <div id="flights-list"></div>
-      <div id="empty-state" class="empty-state hidden">
-        <p>No flights tracked yet. Add one above to get started!</p>
-      </div>
-      <div id="loading-state" class="loading-state hidden">
-        <div class="spinner"></div>
-        <p>Loading flights...</p>
-      </div>
-    </div>
-
-    <!-- Price history modal -->
-    <div id="modal-overlay" class="modal-overlay hidden">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 id="modal-title">Price History</h3>
-          <button class="modal-close" id="modal-close">&times;</button>
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-number" id="stat-total">0</span>
+          <span class="stat-label">Tracked</span>
         </div>
-        <div id="modal-body" class="modal-body"></div>
+        <div class="stat">
+          <span class="stat-number" id="stat-deals">0</span>
+          <span class="stat-label">Dropped $75+</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" id="stat-active">0</span>
+          <span class="stat-label">Active</span>
+        </div>
       </div>
-    </div>
-  </main>
 
-  <footer>
-    <p>Marketwake Flight Tracker &mdash; Built for the team</p>
-  </footer>
+      <!-- Filter/sort controls -->
+      <div class="controls">
+        <h2>Tracked Flights</h2>
+        <div class="control-group">
+          <select id="filter-status">
+            <option value="all">All Flights</option>
+            <option value="active">Active</option>
+            <option value="deal">Dropped $75+</option>
+            <option value="expired">Expired</option>
+          </select>
+          <button class="btn btn-secondary" id="refresh-btn">Refresh</button>
+        </div>
+      </div>
+
+      <!-- Flight cards -->
+      <div id="flights-container">
+        <div id="flights-list"></div>
+        <div id="empty-state" class="empty-state hidden">
+          <p>No flights tracked yet. Add one above to get started!</p>
+        </div>
+        <div id="loading-state" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Loading flights...</p>
+        </div>
+      </div>
+
+      <!-- Price history modal -->
+      <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 id="modal-title">Price History</h3>
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          <div id="modal-body" class="modal-body"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Marketwake Flight Tracker &mdash; Built for the team</p>
+    </footer>
+  </div>
 
   <!-- Toast notifications -->
   <div id="toast-container"></div>
