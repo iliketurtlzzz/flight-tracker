@@ -69,7 +69,6 @@ async function handleAddFlight(e) {
     return_date: document.getElementById('return-date').value || null,
     initial_price: parseFloat(document.getElementById('current-price').value),
     current_price: parseFloat(document.getElementById('current-price').value),
-    target_price: parseFloat(document.getElementById('target-price').value) || DEFAULT_TARGET_PRICE,
     notes: document.getElementById('notes').value.trim() || null,
     status: 'active',
   };
@@ -91,7 +90,6 @@ async function handleAddFlight(e) {
 
     showToast(`Tracking ${flight.origin} → ${flight.destination}!`);
     document.getElementById('flight-form').reset();
-    document.getElementById('target-price').value = DEFAULT_TARGET_PRICE;
     loadFlights();
   } catch (err) {
     console.error('Failed to add flight:', err);
@@ -168,7 +166,7 @@ function renderFlights() {
 
   let flights = allFlights;
   if (filter === 'active') flights = flights.filter(f => f.status === 'active');
-  else if (filter === 'deal') flights = flights.filter(f => f.current_price <= f.target_price);
+  else if (filter === 'deal') flights = flights.filter(f => (f.initial_price - f.current_price) >= 75);
   else if (filter === 'expired') flights = flights.filter(f => f.status === 'expired');
 
   if (flights.length === 0) {
@@ -194,7 +192,8 @@ function renderFlights() {
 }
 
 function renderFlightCard(flight) {
-  const isDeal = flight.current_price <= flight.target_price;
+  const priceDrop = flight.initial_price - flight.current_price;
+  const isDeal = priceDrop >= 75;
   const priceDiff = flight.current_price - flight.initial_price;
   const pctChange = ((priceDiff / flight.initial_price) * 100).toFixed(1);
   const priceChanged = Math.abs(priceDiff) > 0.01;
@@ -223,9 +222,6 @@ function renderFlightCard(flight) {
           <span class="label">Depart:</span> ${departDate}
         </div>
         ${returnDate ? `<div class="flight-detail"><span class="label">Return:</span> ${returnDate}</div>` : ''}
-        <div class="flight-detail">
-          <span class="label">Target:</span> $${flight.target_price}
-        </div>
         ${flight.notes ? `<div class="flight-detail"><span class="label">Notes:</span> ${flight.notes}</div>` : ''}
       </div>
 
@@ -257,15 +253,16 @@ function renderFlightCard(flight) {
 // ---- Stats ----
 function updateStats() {
   document.getElementById('stat-total').textContent = allFlights.length;
-  document.getElementById('stat-deals').textContent = allFlights.filter(f => f.current_price <= f.target_price).length;
+  document.getElementById('stat-deals').textContent = allFlights.filter(f => (f.initial_price - f.current_price) >= 75).length;
   document.getElementById('stat-active').textContent = allFlights.filter(f => f.status === 'active').length;
 }
 
 // ---- Deal Alerts ----
 function checkForDeals() {
-  const deals = allFlights.filter(f => f.status === 'active' && f.current_price <= f.target_price);
+  const deals = allFlights.filter(f => f.status === 'active' && (f.initial_price - f.current_price) >= 75);
   deals.forEach(f => {
-    showToast(`DEAL: ${f.origin} → ${f.destination} is $${f.current_price} (target: $${f.target_price})`, 'deal');
+    const drop = (f.initial_price - f.current_price).toFixed(0);
+    showToast(`ALERT: ${f.origin} → ${f.destination} dropped $${drop}! Now $${f.current_price}`, 'deal');
   });
 }
 

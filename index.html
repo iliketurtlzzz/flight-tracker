@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flight Tracker | MarketWake</title>
+  <title>Flight Tracker | Marketwake</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -52,10 +52,6 @@
             <input type="number" id="current-price" placeholder="150" min="0" step="0.01" required>
           </div>
           <div class="form-group">
-            <label for="target-price">Target Price ($)</label>
-            <input type="number" id="target-price" placeholder="75" min="0" step="0.01" value="75">
-          </div>
-          <div class="form-group">
             <label for="notes">Notes</label>
             <input type="text" id="notes" placeholder="Team offsite, flexible dates...">
           </div>
@@ -72,7 +68,7 @@
       </div>
       <div class="stat">
         <span class="stat-number" id="stat-deals">0</span>
-        <span class="stat-label">Deals Found</span>
+        <span class="stat-label">Dropped $75+</span>
       </div>
       <div class="stat">
         <span class="stat-number" id="stat-active">0</span>
@@ -87,7 +83,7 @@
         <select id="filter-status">
           <option value="all">All Flights</option>
           <option value="active">Active</option>
-          <option value="deal">Deals Only</option>
+          <option value="deal">Dropped $75+</option>
           <option value="expired">Expired</option>
         </select>
         <button class="btn btn-secondary" id="refresh-btn">Refresh</button>
@@ -119,7 +115,7 @@
   </main>
 
   <footer>
-    <p>MarketWake Flight Tracker &mdash; Built for the team</p>
+    <p>Marketwake Flight Tracker &mdash; Built for the team</p>
   </footer>
 
   <!-- Toast notifications -->

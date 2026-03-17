@@ -10,8 +10,8 @@
 const SUPABASE_URL = 'https://ebuxqvlosrdpjpfceojn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVidXhxdmxvc3JkcGpwZmNlb2puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTI2ODIsImV4cCI6MjA4OTI2ODY4Mn0.y-nX5cCcjv9A0GdvLG0oxyap8m2BCvkM4dS3Jr2_--8';
 
-// Default target price for alerts
-const DEFAULT_TARGET_PRICE = 75;
+// Alert threshold — notify when price drops more than this amount
+const DROP_THRESHOLD = 75;
 
 // Initialize Supabase client
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
