@@ -1,158 +1,108 @@
-// 8-bit pixel art bears drawn on canvas
+// 8-bit Winnie (pitbull) & Happy Bear — ported from richmanssport-dashboard
+// Static display versions for the header
+
+function px(c, x, y, w, h) { c.fillRect(x, y, w || 1, h || 1); }
 
 function drawWinnieBear(canvasId) {
   const canvas = document.getElementById(canvasId);
-  const ctx = canvas.getContext('2d');
-  const p = 4; // pixel size (64 / 16 grid)
+  if (!canvas) return;
+  const c = canvas.getContext('2d');
+  c.clearRect(0, 0, 24, 24);
 
-  const colors = {
-    body: '#F4A460',    // sandy brown
-    belly: '#FFDEAD',   // lighter
-    nose: '#4A3728',    // dark brown
-    eye: '#1a1a2e',     // near black
-    cheek: '#FF9999',   // pink blush
-    ear: '#D2691E',     // darker brown
-    honey: '#FFD700',   // gold
-    shirt: '#CC0000',   // red shirt (Winnie!)
+  const p = {
+    body: '#7eb8e0', bodyLt: '#a0d4f0', dark: '#5a9cc5',
+    white: '#e0f0ff', nose: '#3a7ca8', eye: '#1a4a70',
+    tongue: '#e07080', outline: '#4a8ab0'
   };
 
-  ctx.clearRect(0, 0, 64, 64);
-
-  // Helper
-  const px = (x, y, color) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * p, y * p, p, p);
-  };
-
-  // Ears
-  [4,5].forEach(x => [1,2].forEach(y => px(x, y, colors.ear)));
-  [10,11].forEach(x => [1,2].forEach(y => px(x, y, colors.ear)));
-  px(5, 1, colors.belly); px(10, 1, colors.belly);
-
-  // Head
-  for (let x = 5; x <= 10; x++) px(x, 2, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 3, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 4, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 5, colors.body);
-  for (let x = 5; x <= 10; x++) px(x, 6, colors.body);
-
-  // Eyes
-  px(6, 4, colors.eye); px(9, 4, colors.eye);
-
+  // ══ BIG HEAD ══
+  c.fillStyle = p.body;
+  c.fillRect(1, 1, 11, 10); c.fillRect(0, 3, 13, 6);
+  c.fillRect(2, 0, 9, 1);
+  // Dark ears — floppy
+  c.fillStyle = p.dark;
+  c.fillRect(0, 0, 2, 7); c.fillRect(11, 0, 2, 7);
+  // White muzzle
+  c.fillStyle = p.white;
+  c.fillRect(1, 7, 7, 4); c.fillRect(0, 8, 2, 2);
   // Nose
-  px(7, 5, colors.nose); px(8, 5, colors.nose);
+  c.fillStyle = p.nose; px(c, 1, 7, 2, 2);
+  // Eyes — big white with pupils
+  c.fillStyle = p.white; c.fillRect(3, 3, 3, 3); c.fillRect(7, 3, 3, 3);
+  c.fillStyle = p.eye;
+  c.fillRect(4, 4, 2, 2); c.fillRect(8, 4, 2, 2);
+  c.fillStyle = p.white; px(c, 4, 4); px(c, 8, 4); // shine
+  // Mouth — smile
+  c.fillStyle = p.nose; px(c, 3, 10, 3, 1);
 
-  // Cheeks
-  px(5, 5, colors.cheek); px(10, 5, colors.cheek);
+  // ══ BODY ══
+  c.fillStyle = p.body; c.fillRect(4, 11, 9, 6);
+  c.fillStyle = p.white; c.fillRect(5, 14, 5, 3); // belly
+  c.fillStyle = p.bodyLt; c.fillRect(4, 11, 9, 2); // lighter back
 
-  // Red shirt (Winnie!)
-  for (let x = 4; x <= 11; x++) px(x, 7, colors.shirt);
-  for (let x = 3; x <= 12; x++) px(x, 8, colors.shirt);
-  for (let x = 3; x <= 12; x++) px(x, 9, colors.shirt);
-  for (let x = 4; x <= 11; x++) px(x, 10, colors.shirt);
+  // ══ TAIL ══
+  c.fillStyle = p.body;
+  px(c, 13, 11, 2, 1); px(c, 14, 10, 2, 1); px(c, 15, 9, 1, 1);
 
-  // Belly showing under shirt
-  for (let x = 6; x <= 9; x++) px(x, 9, colors.belly);
-  for (let x = 6; x <= 9; x++) px(x, 10, colors.belly);
-
-  // Arms
-  px(3, 8, colors.body); px(2, 9, colors.body);
-  px(12, 8, colors.body); px(13, 9, colors.body);
-
-  // Honey pot in hand
-  px(1, 9, colors.honey); px(2, 10, colors.honey); px(1, 10, colors.honey);
-
-  // Legs
-  px(5, 11, colors.body); px(6, 11, colors.body);
-  px(9, 11, colors.body); px(10, 11, colors.body);
-  px(5, 12, colors.body); px(6, 12, colors.body);
-  px(9, 12, colors.body); px(10, 12, colors.body);
-
-  // Feet
-  for (let x = 4; x <= 6; x++) px(x, 13, colors.nose);
-  for (let x = 9; x <= 11; x++) px(x, 13, colors.nose);
+  // ══ LEGS — standing ══
+  c.fillStyle = p.body;
+  c.fillRect(5, 17, 2, 3); c.fillRect(7, 17, 2, 3);
+  c.fillRect(9, 17, 2, 3); c.fillRect(11, 17, 2, 3);
+  c.fillStyle = p.dark;
+  px(c, 5, 19, 2, 1); px(c, 7, 19, 2, 1);
+  px(c, 9, 19, 2, 1); px(c, 11, 19, 2, 1);
 }
 
 function drawHappyBear(canvasId) {
   const canvas = document.getElementById(canvasId);
-  const ctx = canvas.getContext('2d');
-  const p = 4;
+  if (!canvas) return;
+  const c = canvas.getContext('2d');
+  c.clearRect(0, 0, 24, 24);
 
-  const colors = {
-    body: '#8B5E3C',
-    belly: '#D2A679',
-    nose: '#3B2314',
-    eye: '#1a1a2e',
-    cheek: '#FF9999',
-    ear: '#6B3F23',
-    mouth: '#3B2314',
-    sparkle: '#FFD700',
+  const p = {
+    body: '#A67B5B', bodyLt: '#C49A6C', dark: '#6B4226',
+    white: '#E8D5B7', nose: '#3a2010', eye: '#1a0a00',
+    mouth: '#d06060', ears: '#6B4226'
   };
 
-  ctx.clearRect(0, 0, 64, 64);
+  // ══ ROUND EARS ══
+  c.fillStyle = p.ears;
+  c.fillRect(0, 0, 4, 4); c.fillRect(9, 0, 4, 4);
+  c.fillStyle = p.bodyLt; px(c, 1, 1, 2, 2); px(c, 10, 1, 2, 2); // inner ear
 
-  const px = (x, y, color) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * p, y * p, p, p);
-  };
-
-  // Ears
-  [4,5].forEach(x => [1,2].forEach(y => px(x, y, colors.ear)));
-  [10,11].forEach(x => [1,2].forEach(y => px(x, y, colors.ear)));
-  px(5, 1, colors.belly); px(10, 1, colors.belly);
-
-  // Head
-  for (let x = 5; x <= 10; x++) px(x, 2, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 3, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 4, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 5, colors.body);
-  for (let x = 5; x <= 10; x++) px(x, 6, colors.body);
-
-  // Happy eyes (^ ^) - closed happy eyes
-  px(6, 4, colors.eye); px(5, 3, colors.eye); px(7, 3, colors.eye);
-  px(9, 4, colors.eye); px(8, 3, colors.eye); px(10, 3, colors.eye);
-
-  // Big smile
-  px(6, 5, colors.mouth); px(7, 6, colors.mouth); px(8, 6, colors.mouth); px(9, 5, colors.mouth);
-
+  // ══ BIG ROUND HEAD ══
+  c.fillStyle = p.body;
+  c.fillRect(0, 2, 13, 10); c.fillRect(1, 1, 11, 1); c.fillRect(1, 12, 11, 1);
+  // Muzzle
+  c.fillStyle = p.white;
+  c.fillRect(2, 8, 8, 4); c.fillRect(3, 7, 6, 1);
   // Nose
-  px(7, 5, colors.nose); px(8, 5, colors.nose);
+  c.fillStyle = p.nose; px(c, 4, 8, 4, 2);
+  // Eyes — big with shine
+  c.fillStyle = p.eye;
+  c.fillRect(3, 4, 2, 3); c.fillRect(8, 4, 2, 3);
+  c.fillStyle = p.white; px(c, 3, 4); px(c, 8, 4); // shine
+  // Mouth — smile
+  c.fillStyle = p.nose; px(c, 5, 11, 2, 1);
 
-  // Cheeks
-  px(5, 5, colors.cheek); px(10, 5, colors.cheek);
+  // ══ BODY ══
+  c.fillStyle = p.body; c.fillRect(3, 12, 10, 6); c.fillRect(2, 13, 12, 4);
+  c.fillStyle = p.white; c.fillRect(5, 14, 5, 4); // belly
+  c.fillStyle = p.bodyLt; c.fillRect(3, 12, 10, 2); // lighter back
 
-  // Sparkles around head
-  px(3, 2, colors.sparkle); px(12, 2, colors.sparkle);
-  px(2, 4, colors.sparkle); px(13, 4, colors.sparkle);
+  // ══ STUBBY TAIL ══
+  c.fillStyle = p.body; px(c, 14, 13, 1, 2);
 
-  // Body
-  for (let x = 5; x <= 10; x++) px(x, 7, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 8, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 9, colors.body);
-  for (let x = 4; x <= 11; x++) px(x, 10, colors.body);
-  for (let x = 5; x <= 10; x++) px(x, 11, colors.body);
-
-  // Belly
-  for (let x = 6; x <= 9; x++) {
-    px(x, 8, colors.belly);
-    px(x, 9, colors.belly);
-    px(x, 10, colors.belly);
-  }
-
-  // Arms raised (happy!)
-  px(3, 7, colors.body); px(2, 6, colors.body); px(2, 5, colors.body);
-  px(12, 7, colors.body); px(13, 6, colors.body); px(13, 5, colors.body);
-
-  // Legs
-  px(5, 12, colors.body); px(6, 12, colors.body);
-  px(9, 12, colors.body); px(10, 12, colors.body);
-
-  // Feet
-  for (let x = 4; x <= 6; x++) px(x, 13, colors.nose);
-  for (let x = 9; x <= 11; x++) px(x, 13, colors.nose);
+  // ══ LEGS — standing ══
+  c.fillStyle = p.body;
+  c.fillRect(4, 17, 2, 3); c.fillRect(6, 17, 2, 3);
+  c.fillRect(9, 17, 2, 3); c.fillRect(11, 17, 2, 3);
+  c.fillStyle = p.dark;
+  px(c, 4, 19, 2, 1); px(c, 6, 19, 2, 1);
+  px(c, 9, 19, 2, 1); px(c, 11, 19, 2, 1);
 }
 
-// Draw bears when page loads
+// Draw on load
 document.addEventListener('DOMContentLoaded', () => {
   drawWinnieBear('winnie-bear');
   drawHappyBear('happy-bear');

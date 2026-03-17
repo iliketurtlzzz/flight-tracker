@@ -8,7 +8,6 @@
 -- Flights table
 CREATE TABLE IF NOT EXISTS flights (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_name TEXT NOT NULL,
   origin TEXT NOT NULL,
   destination TEXT NOT NULL,
   airline TEXT,
@@ -32,7 +31,6 @@ CREATE TABLE IF NOT EXISTS price_history (
 );
 
 -- Indexes for fast queries
-CREATE INDEX IF NOT EXISTS idx_flights_user ON flights(user_name);
 CREATE INDEX IF NOT EXISTS idx_flights_status ON flights(status);
 CREATE INDEX IF NOT EXISTS idx_price_history_flight ON price_history(flight_id);
 
@@ -41,7 +39,6 @@ ALTER TABLE flights ENABLE ROW LEVEL SECURITY;
 ALTER TABLE price_history ENABLE ROW LEVEL SECURITY;
 
 -- Allow all operations for anonymous users (since we use anon key)
--- In production, you'd want proper auth
 CREATE POLICY "Allow all access to flights"
   ON flights FOR ALL
   USING (true)
@@ -51,6 +48,3 @@ CREATE POLICY "Allow all access to price_history"
   ON price_history FOR ALL
   USING (true)
   WITH CHECK (true);
-
--- Enable realtime (optional - for live price updates across tabs)
-ALTER PUBLICATION supabase_realtime ADD TABLE flights;

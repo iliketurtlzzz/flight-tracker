@@ -1,51 +1,22 @@
 // ============================================
-// Flight Tracker App
+// Flight Tracker App — Single screen, all flights
 // ============================================
 
-let currentUser = null;
 let allFlights = [];
 
 // ---- Initialization ----
 document.addEventListener('DOMContentLoaded', () => {
-  // Check for saved user
-  const savedUser = localStorage.getItem('flight-tracker-user');
-  if (savedUser) {
-    currentUser = savedUser;
-    showApp();
-  }
+  loadFlights();
 
-  // User form
-  document.getElementById('user-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('user-name').value.trim();
-    if (name) {
-      currentUser = name;
-      localStorage.setItem('flight-tracker-user', name);
-      showApp();
-    }
-  });
-
-  // Flight form
   document.getElementById('flight-form').addEventListener('submit', handleAddFlight);
-
-  // Filter
   document.getElementById('filter-status').addEventListener('change', renderFlights);
-
-  // Refresh
   document.getElementById('refresh-btn').addEventListener('click', loadFlights);
 
-  // Modal close
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('modal-overlay').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModal();
   });
 });
-
-function showApp() {
-  document.getElementById('user-gate').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  loadFlights();
-}
 
 // ---- Toast Notifications ----
 function showToast(message, type = 'success') {
@@ -71,7 +42,6 @@ async function loadFlights() {
     const { data, error } = await supabase
       .from('flights')
       .select('*, price_history(*)')
-      .eq('user_name', currentUser)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -92,7 +62,6 @@ async function handleAddFlight(e) {
   e.preventDefault();
 
   const flight = {
-    user_name: currentUser,
     origin: document.getElementById('origin').value.trim().toUpperCase(),
     destination: document.getElementById('destination').value.trim().toUpperCase(),
     airline: document.getElementById('airline').value.trim() || null,
@@ -165,7 +134,6 @@ async function deleteFlight(flightId) {
   if (!confirm('Remove this flight from tracking?')) return;
 
   try {
-    // Delete price history first
     await supabase.from('price_history').delete().eq('flight_id', flightId);
     const { error } = await supabase.from('flights').delete().eq('id', flightId);
     if (error) throw error;
@@ -334,7 +302,6 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
 }
 
-// Close modal on Escape
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
