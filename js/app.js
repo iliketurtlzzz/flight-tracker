@@ -20,11 +20,12 @@ function googleFlightsUrl(origin, destination, departDate, returnDate) {
 
 // Simpler direct Google Flights search link
 function gfLink(origin, dest, depDate, retDate) {
-  let url = `https://www.google.com/travel/flights?q=flights+from+${origin}+to+${dest}`;
+  let url = `https://www.google.com/travel/flights?q=Delta+flights+from+${origin}+to+${dest}`;
   if (depDate) url += `+on+${depDate}`;
   if (retDate) url += `+return+${retDate}`;
   return url;
 }
+
 
 // ---- Initialization ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -86,13 +87,15 @@ async function handleAddFlight(e) {
   const flight = {
     origin: document.getElementById('origin').value.trim().toUpperCase(),
     destination: document.getElementById('destination').value.trim().toUpperCase(),
-    airline: document.getElementById('airline').value.trim() || null,
+    airline: 'Delta',
+    seat_class: document.getElementById('seat-class').value,
     departure_date: document.getElementById('departure-date').value,
     return_date: document.getElementById('return-date').value || null,
     initial_price: parseFloat(document.getElementById('current-price').value),
     current_price: parseFloat(document.getElementById('current-price').value),
     stops: document.getElementById('stops').value || null,
     flight_number: document.getElementById('flight-number').value.trim() || null,
+    confirmation_code: document.getElementById('confirmation-code').value.trim().toUpperCase() || null,
     notes: document.getElementById('notes').value.trim() || null,
     status: 'active',
   };
@@ -239,8 +242,9 @@ function renderFlightCard(flight) {
         <span class="airport-code">${flight.origin}</span>
         <span class="route-arrow">${flight.return_date ? '⇄' : '→'}</span>
         <span class="airport-code">${flight.destination}</span>
-        ${flight.airline ? `<span class="flight-airline">${flight.airline}</span>` : ''}
+        <span class="flight-airline delta-badge">Delta</span>
         ${flight.flight_number ? `<span class="flight-airline">#${flight.flight_number}</span>` : ''}
+        ${flight.seat_class ? `<span class="seat-badge seat-${(flight.seat_class || '').replace(/[^a-zA-Z]/g, '').toLowerCase()}">${flight.seat_class}</span>` : ''}
       </div>
 
       <div class="flight-details">
@@ -249,6 +253,7 @@ function renderFlightCard(flight) {
         </div>
         ${returnDate ? `<div class="flight-detail"><span class="label">Return:</span> ${returnDate}</div>` : ''}
         ${flight.stops ? `<div class="flight-detail"><span class="label">Stops:</span> ${flight.stops}</div>` : ''}
+        ${flight.confirmation_code ? `<div class="flight-detail"><span class="label">Conf:</span> <strong>${flight.confirmation_code}</strong></div>` : ''}
         ${flight.notes ? `<div class="flight-detail"><span class="label">Notes:</span> ${flight.notes}</div>` : ''}
       </div>
 

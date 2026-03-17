@@ -44,8 +44,15 @@
               <input type="text" id="destination" placeholder="LAX" maxlength="3" required>
             </div>
             <div class="form-group">
-              <label for="airline">Airline</label>
-              <input type="text" id="airline" placeholder="Delta">
+              <label for="seat-class">Seat Class</label>
+              <select id="seat-class">
+                <option value="Basic Economy">Basic Economy</option>
+                <option value="Main Cabin" selected>Main Cabin</option>
+                <option value="Comfort+">Delta Comfort+</option>
+                <option value="Premium Select">Premium Select</option>
+                <option value="First Class">First Class</option>
+                <option value="Delta One">Delta One</option>
+              </select>
             </div>
             <div class="form-group">
               <label for="departure-date">Departure Date</label>
@@ -71,6 +78,10 @@
             <div class="form-group">
               <label for="flight-number">Flight # (optional)</label>
               <input type="text" id="flight-number" placeholder="DL 123">
+            </div>
+            <div class="form-group">
+              <label for="confirmation-code">Confirmation Code</label>
+              <input type="text" id="confirmation-code" placeholder="ABC123" maxlength="6">
             </div>
             <div class="form-group">
               <label for="notes">Notes</label>

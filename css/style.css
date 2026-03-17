@@ -455,6 +455,56 @@ input::placeholder {
   font-size: 0.85rem;
 }
 
+.delta-badge {
+  background: #003366;
+  color: #c8102e;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.seat-badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-left: 0;
+}
+
+.seat-basiceconomy {
+  background: rgba(139, 143, 163, 0.2);
+  color: var(--text-muted);
+}
+
+.seat-maincabin {
+  background: rgba(108, 92, 231, 0.15);
+  color: #a89be8;
+}
+
+.seat-comfort {
+  background: rgba(0, 184, 148, 0.15);
+  color: var(--success);
+}
+
+.seat-premiumselect {
+  background: rgba(253, 203, 110, 0.2);
+  color: var(--warning);
+}
+
+.seat-firstclass {
+  background: rgba(0, 206, 201, 0.2);
+  color: var(--deal);
+}
+
+.seat-deltaone {
+  background: rgba(200, 16, 46, 0.2);
+  color: #ff6b7a;
+}
+
 .flight-details {
   display: flex;
   gap: 1.5rem;
