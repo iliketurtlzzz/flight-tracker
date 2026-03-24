@@ -7,8 +7,8 @@
 // 4. Run the SQL from sql/setup.sql in the Supabase SQL Editor
 // ============================================
 
-const SUPABASE_URL = 'https://ebuxqvlosrdpjpfceojn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVidXhxdmxvc3JkcGpwZmNlb2puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTI2ODIsImV4cCI6MjA4OTI2ODY4Mn0.y-nX5cCcjv9A0GdvLG0oxyap8m2BCvkM4dS3Jr2_--8';
+const SUPABASE_URL = 'https://qpxyblzcovidscihwrqo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_inu2ha0hHIPY8lRrO1QSFw_8NwrhJFi';
 
 // Alert threshold — notify when price drops more than this amount
 const DROP_THRESHOLD = 75;

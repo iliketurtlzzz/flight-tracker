@@ -4,8 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flight Tracker | Marketwake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Apply saved theme before render to prevent flash
+    (function() {
+      var t = localStorage.getItem('mw-theme') || 'dark';
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
 </head>
 <body>
   <div class="app">
@@ -15,7 +25,10 @@
           <h1>Flight Tracker</h1>
           <p class="tagline">Track flights. Catch deals. Fly cheap.</p>
         </div>
-        <button id="petToggle" onclick="togglePetManual()" title="Switch pet">🐕</button>
+        <div class="header-controls">
+          <button id="themeToggle" title="Toggle light/dark mode">☀️</button>
+          <button id="petToggle" onclick="togglePetManual()" title="Switch pet">🐕</button>
+        </div>
       </div>
     </header>
 
@@ -151,13 +164,34 @@
     </main>
 
     <footer>
-      <p>Marketwake Flight Tracker &mdash; Built for the team</p>
+      <p>Marketwake Flight Tracker // Built for the team</p>
     </footer>
   </div>
 
   <!-- Toast notifications -->
   <div id="toast-container"></div>
 
+  <script>
+    // Theme toggle
+    (function() {
+      var btn = document.getElementById('themeToggle');
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          btn.textContent = '\u{1F319}';
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          btn.textContent = '\u{2600}\u{FE0F}';
+        }
+        localStorage.setItem('mw-theme', theme);
+      }
+      applyTheme(localStorage.getItem('mw-theme') || 'dark');
+      btn.addEventListener('click', function() {
+        var current = localStorage.getItem('mw-theme') || 'dark';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    })();
+  </script>
   <script src="js/config.js"></script>
   <script src="js/bears.js"></script>
   <script src="js/app.js"></script>

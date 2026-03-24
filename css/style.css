@@ -5,29 +5,64 @@
   padding: 0;
 }
 
+/* ========== Marketwake Brand Tokens ========== */
+/* Dark mode (default) */
 :root {
-  --bg: #0f1117;
-  --surface: #1a1d27;
-  --surface-hover: #222633;
-  --border: #2a2e3d;
-  --text: #e4e6ed;
-  --text-muted: #8b8fa3;
-  --primary: #6c5ce7;
-  --primary-hover: #7f71ed;
+  --bg: #11143f;
+  --surface: #1a1e4a;
+  --surface-hover: #232858;
+  --border: #2e3368;
+  --text: #f0f1f2;
+  --text-muted: #9a9dc0;
+  --primary: #eeff25;
+  --primary-hover: #f5ff66;
+  --primary-text: #11143f;
+  --accent: #0038ff;
+  --accent-hover: #1c4cf6;
   --success: #00b894;
   --warning: #fdcb6e;
-  --danger: #e17055;
-  --deal: #00cec9;
+  --danger: #ff5e30;
+  --deal: #eeff25;
   --radius: 12px;
   --radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --header-bg: linear-gradient(135deg, #11143f 0%, #1a1e4a 40%, #0038ff 100%);
+  --modal-overlay: rgba(0, 0, 0, 0.6);
+  --delta-badge-bg: #003366;
+  --delta-badge-text: #c8102e;
+}
+
+/* Light mode */
+[data-theme="light"] {
+  --bg: #f0f1f2;
+  --surface: #ffffff;
+  --surface-hover: #f4f8ff;
+  --border: #d0d3e0;
+  --text: #0c0c0c;
+  --text-muted: #5c5f7a;
+  --primary: #0038ff;
+  --primary-hover: #1c4cf6;
+  --primary-text: #ffffff;
+  --accent: #11143f;
+  --accent-hover: #1a1e4a;
+  --success: #00a884;
+  --warning: #d49b00;
+  --danger: #e04425;
+  --deal: #0038ff;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --header-bg: linear-gradient(135deg, #ffffff 0%, #f4f8ff 40%, #dde4ff 100%);
+  --modal-overlay: rgba(0, 0, 0, 0.25);
+  --delta-badge-bg: #e8edf5;
+  --delta-badge-text: #c8102e;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter Tight', 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
 }
 
 .app {
@@ -36,9 +71,10 @@ body {
 
 /* ========== Header ========== */
 header {
-  background: linear-gradient(135deg, #1a1d27 0%, #2d1b69 50%, #1a1d27 100%);
+  background: var(--header-bg);
   border-bottom: 1px solid var(--border);
   padding: 1.5rem 1rem;
+  transition: background 0.3s;
 }
 
 .header-content {
@@ -55,12 +91,10 @@ header {
 }
 
 .header-text h1 {
+  font-family: 'Inter Tight', -apple-system, sans-serif;
   font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #6c5ce7, #00cec9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   letter-spacing: -0.5px;
 }
 
@@ -68,14 +102,22 @@ header {
   color: var(--text-muted);
   font-size: 0.9rem;
   margin-top: 0.25rem;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.3px;
 }
 
-/* Pet toggle button — top right */
-#petToggle {
+/* Header controls (theme toggle + pet toggle) */
+.header-controls {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+#themeToggle, #petToggle {
   padding: 4px 8px;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -83,10 +125,10 @@ header {
   color: var(--text);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
-#petToggle:hover {
+#themeToggle:hover, #petToggle:hover {
   background: var(--surface-hover);
 }
 
@@ -216,12 +258,14 @@ main {
   border-radius: var(--radius);
   padding: 1.5rem;
   margin-bottom: 1.25rem;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .card h2 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
   font-weight: 700;
+  font-family: 'Inter Tight', sans-serif;
 }
 
 /* ========== Forms ========== */
@@ -234,12 +278,13 @@ main {
 
 .form-group label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   margin-bottom: 0.35rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 input, select {
@@ -250,7 +295,8 @@ input, select {
   border-radius: var(--radius-sm);
   color: var(--text);
   font-size: 0.95rem;
-  transition: border-color 0.2s;
+  font-family: 'Inter Tight', sans-serif;
+  transition: border-color 0.2s, background 0.3s;
 }
 
 input:focus, select:focus {
@@ -272,11 +318,12 @@ input::placeholder {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: 'Space Grotesk', 'Inter Tight', sans-serif;
 }
 
 .btn-primary {
   background: var(--primary);
-  color: white;
+  color: var(--primary-text);
 }
 
 .btn-primary:hover {
@@ -311,21 +358,25 @@ input::placeholder {
 }
 
 .btn-search {
-  background: rgba(0, 206, 201, 0.15);
-  color: var(--deal);
-  border: 1px solid var(--deal);
+  background: rgba(0, 56, 255, 0.12);
+  color: var(--accent);
+  border: 1px solid var(--accent);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
 }
 
+[data-theme="light"] .btn-search {
+  background: rgba(0, 56, 255, 0.08);
+}
+
 .btn-search:hover {
-  background: var(--deal);
-  color: var(--bg);
+  background: var(--accent);
+  color: white;
 }
 
 .btn-book {
-  background: rgba(108, 92, 231, 0.15);
+  background: rgba(238, 255, 37, 0.1);
   color: var(--primary);
   border: 1px solid var(--primary);
   text-decoration: none;
@@ -333,9 +384,13 @@ input::placeholder {
   align-items: center;
 }
 
+[data-theme="light"] .btn-book {
+  background: rgba(0, 56, 255, 0.05);
+}
+
 .btn-book:hover {
   background: var(--primary);
-  color: white;
+  color: var(--primary-text);
 }
 
 .savings-tag {
@@ -357,6 +412,7 @@ input::placeholder {
   border-radius: var(--radius);
   padding: 1rem;
   text-align: center;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .stat-number {
@@ -364,6 +420,7 @@ input::placeholder {
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--primary);
+  font-family: 'Inter Tight', sans-serif;
 }
 
 .stat-label {
@@ -371,6 +428,7 @@ input::placeholder {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ========== Controls ========== */
@@ -404,17 +462,21 @@ input::placeholder {
   border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 0.75rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.3s;
   position: relative;
 }
 
 .flight-card:hover {
-  border-color: var(--primary);
+  border-color: var(--accent);
 }
 
 .flight-card.is-deal {
   border-color: var(--deal);
-  box-shadow: 0 0 20px rgba(0, 206, 201, 0.1);
+  box-shadow: 0 0 20px rgba(238, 255, 37, 0.08);
+}
+
+[data-theme="light"] .flight-card.is-deal {
+  box-shadow: 0 0 20px rgba(0, 56, 255, 0.08);
 }
 
 .flight-card.is-deal::before {
@@ -423,12 +485,13 @@ input::placeholder {
   top: -10px;
   right: 16px;
   background: var(--deal);
-  color: var(--bg);
+  color: var(--primary-text);
   padding: 0.15rem 0.6rem;
   border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 1px;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .flight-route {
@@ -442,6 +505,7 @@ input::placeholder {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
+  font-family: 'Inter Tight', sans-serif;
 }
 
 .route-arrow {
@@ -456,8 +520,8 @@ input::placeholder {
 }
 
 .delta-badge {
-  background: #003366;
-  color: #c8102e;
+  background: var(--delta-badge-bg);
+  color: var(--delta-badge-text);
   padding: 0.1rem 0.5rem;
   border-radius: 4px;
   font-weight: 700;
@@ -473,6 +537,7 @@ input::placeholder {
   font-weight: 600;
   letter-spacing: 0.3px;
   margin-left: 0;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .seat-basiceconomy {
@@ -481,8 +546,12 @@ input::placeholder {
 }
 
 .seat-maincabin {
-  background: rgba(108, 92, 231, 0.15);
-  color: #a89be8;
+  background: rgba(0, 56, 255, 0.12);
+  color: var(--accent);
+}
+
+[data-theme="light"] .seat-maincabin {
+  background: rgba(0, 56, 255, 0.08);
 }
 
 .seat-comfort {
@@ -496,13 +565,22 @@ input::placeholder {
 }
 
 .seat-firstclass {
-  background: rgba(0, 206, 201, 0.2);
-  color: var(--deal);
+  background: rgba(238, 255, 37, 0.15);
+  color: var(--primary);
+}
+
+[data-theme="light"] .seat-firstclass {
+  background: rgba(0, 56, 255, 0.08);
 }
 
 .seat-deltaone {
-  background: rgba(200, 16, 46, 0.2);
+  background: rgba(200, 16, 46, 0.15);
   color: #ff6b7a;
+}
+
+[data-theme="light"] .seat-deltaone {
+  background: rgba(200, 16, 46, 0.08);
+  color: #c8102e;
 }
 
 .flight-details {
@@ -533,6 +611,7 @@ input::placeholder {
 .price-current {
   font-size: 1.4rem;
   font-weight: 800;
+  font-family: 'Inter Tight', sans-serif;
 }
 
 .price-current.under-target {
@@ -558,7 +637,7 @@ input::placeholder {
 }
 
 .price-change.up {
-  background: rgba(225, 112, 85, 0.15);
+  background: rgba(255, 94, 48, 0.15);
   color: var(--danger);
 }
 
@@ -574,6 +653,7 @@ input::placeholder {
   margin-top: 0.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ========== Empty & Loading ========== */
@@ -605,7 +685,7 @@ input::placeholder {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -678,7 +758,7 @@ input::placeholder {
   font-size: 0.9rem;
   animation: slideIn 0.3s ease;
   max-width: 350px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
 }
 
 .toast.success { border-left: 3px solid var(--success); }
@@ -697,6 +777,7 @@ footer {
   color: var(--text-muted);
   font-size: 0.8rem;
   border-top: 1px solid var(--border);
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ========== Responsive ========== */
@@ -726,5 +807,11 @@ footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .header-controls {
+    position: static;
+    transform: none;
+    margin-top: 0.5rem;
   }
 }
