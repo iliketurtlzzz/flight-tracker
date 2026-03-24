@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS flights (
   flight_number TEXT,
   confirmation_code TEXT,
   notes TEXT,
+  return_seat_class TEXT DEFAULT NULL,
+  outbound_price DECIMAL(10,2),
+  return_price DECIMAL(10,2),
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'expired', 'booked')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -30,6 +33,7 @@ CREATE TABLE IF NOT EXISTS price_history (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   flight_id UUID REFERENCES flights(id) ON DELETE CASCADE,
   price DECIMAL(10,2) NOT NULL,
+  leg TEXT DEFAULT NULL CHECK (leg IN ('outbound', 'return')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -51,3 +55,12 @@ CREATE POLICY "Allow all access to price_history"
   ON price_history FOR ALL
   USING (true)
   WITH CHECK (true);
+
+-- ============================================
+-- Migration: Mixed-cabin round trips
+-- Run this if tables already exist
+-- ============================================
+ALTER TABLE flights ADD COLUMN IF NOT EXISTS return_seat_class TEXT DEFAULT NULL;
+ALTER TABLE flights ADD COLUMN IF NOT EXISTS outbound_price DECIMAL(10,2);
+ALTER TABLE flights ADD COLUMN IF NOT EXISTS return_price DECIMAL(10,2);
+ALTER TABLE price_history ADD COLUMN IF NOT EXISTS leg TEXT DEFAULT NULL;

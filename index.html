@@ -57,10 +57,22 @@
               <input type="text" id="destination" placeholder="LAX" maxlength="3" required>
             </div>
             <div class="form-group">
-              <label for="seat-class">Seat Class</label>
+              <label for="seat-class">Outbound Seat Class</label>
               <select id="seat-class">
                 <option value="Basic Economy">Basic Economy</option>
                 <option value="Main Cabin" selected>Main Cabin</option>
+                <option value="Comfort+">Delta Comfort+</option>
+                <option value="Premium Select">Premium Select</option>
+                <option value="First Class">First Class</option>
+                <option value="Delta One">Delta One</option>
+              </select>
+            </div>
+            <div class="form-group" id="return-seat-class-group" style="display:none">
+              <label for="return-seat-class">Return Seat Class</label>
+              <select id="return-seat-class">
+                <option value="" selected>Same as outbound</option>
+                <option value="Basic Economy">Basic Economy</option>
+                <option value="Main Cabin">Main Cabin</option>
                 <option value="Comfort+">Delta Comfort+</option>
                 <option value="Premium Select">Premium Select</option>
                 <option value="First Class">First Class</option>

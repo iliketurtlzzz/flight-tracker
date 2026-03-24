@@ -664,6 +664,14 @@ select {
   color: var(--deal);
 }
 
+.price-breakdown {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.3px;
+  margin-top: 0.35rem;
+}
+
 .price-original {
   color: var(--text-muted);
   font-size: 0.85rem;
